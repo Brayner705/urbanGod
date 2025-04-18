@@ -1,0 +1,145 @@
+<div>
+    <!--Logo-->
+    <div class="logo">
+        <img src="logo.jpg" alt="Logo">
+        <h1>Urban God</h1>
+    </div>
+
+    <!--Stock-->
+    <div class="stock">
+        <div class="container_stock">
+            <h5 class="title_stock">📦 Resumen inventario</h5>
+
+            <div class="container_product">
+                <!-- Product dinamyc load-->
+
+                @for (item of productsShop; track $index) {
+                    <div class="item">
+                        <h5>{{ item.name }}</h5>
+                        <h5 class="unit">{{ item.stock }} unidades</h5>
+                    </div>
+                }
+                <!--End-->
+            </div>
+
+        </div>
+    </div>
+ 
+    <!--Accounting-->
+    <div class="accounting">
+        <div class="container_stock">
+            <h5 class="title_stock">💲 Contabilidad</h5>
+            <h5 >Ventas del dia: {{ ventasTotales }}$</h5>
+            <h5 >Gastos del dia: {{ totalSpent }} $</h5>
+            <h5 >Balance del dia:  {{ balance }} $</h5>
+        </div>
+    </div>
+
+    <!--Buttons-->
+    <div class="buttons">
+        <button (click)="sale()" class="add_sales"><i class="fa-solid fa-plus"></i>Nueva venta</button>
+        <button (click)="addProduct()" class="add_product"><i class="fa-solid fa-box"></i>Nuevo producto</button>
+    </div>
+</div>
+
+<!--Product modal-->
+@if (mostrarProduct) {
+    <div class="modal product">
+        <div class="infoModal">
+            <i (click)="exit()" class="fa-solid fa-xmark"></i>
+            <div class="modalContainerProduct">
+                <h2>Producto</h2>
+                    <div class="btns">
+                        <div>
+                            <label>Nombre producto</label>
+                            <input [(ngModel)]="productNameAdd" type="text" id="nameProduct" placeholder="Nombre producto" required>
+                        </div>
+                
+                        <div>
+                            <label>cantidad producto</label>
+                            <input [(ngModel)]="stockProductAdd" type="number" id="stockProduct" placeholder="Cantidad producto" required>
+                        </div>
+    
+                        <div>
+                            <label>Precio producto</label>
+                            <input [(ngModel)]="priceProductAdd" type="number" id="priceProduct" placeholder="Precio producto"
+                            required>
+                        </div>
+                        
+                        <!-- <div>
+                            <label>Imagen producto</label>
+                            <input type="file">
+                        </div> -->
+                    </div>
+    
+                    <button (click)="saveProducts()">Agregar</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!--Sales Modal-->
+
+@if (showSale) {
+    <div class="modal venta">
+        <div class="infoModal">
+            <i (click)="exit()" class="fa-solid fa-xmark"></i>
+            <div class="modalContainerProduct">
+                <h2>Venta</h2>
+                    <div class="btns">
+                        <div class="SaleProducts">
+                            <label>Nombre producto</label>
+                            <select id="producto" [(ngModel)]="selectedProduct">
+                                @for (item of productos; track $index) {
+                                    <option value="{{item}}">{{item}}</option>
+                                }
+                            </select>
+                        </div>
+                
+                        <div>
+                            <label>cantidad producto</label>
+                            <input [(ngModel)]="stockProduct" type="number" id="stockProduct" placeholder="Cantidad producto">
+                        </div>
+    
+                        <div>
+                            <label>Precio producto</label>
+                            <input [(ngModel)]="priceProduct" type="number" id="priceProduct" placeholder="Precio producto">
+                        </div>
+                    </div>
+    
+                    <button (click)="addSale()">Vender</button>
+                    <i class="fa-solid fa-chevron-right" id="arrow_right" (click)="showSpentModal()"></i>
+            </div>
+        </div>
+    </div>
+}
+@if (showSpent) {
+    <!-- gastos-->
+<div class="modal gasto">>
+    <div class="infoModal">
+        <i (click)="exit()" class="fa-solid fa-xmark"></i>
+        <div class="modalContainerProduct">
+            <h2>Gasto</h2>
+                <div class="btns">
+                    <div class="SaleProducts">
+                        <label>Nombre del gasto</label>
+                        <input [(ngModel)]="nameProduct" type="text" id="nameProduct" placeholder="Nombre producto">
+                    </div>
+            
+                    <div>
+                        <label>cantidad</label>
+                        <input [(ngModel)]="stockProduct" type="number" id="stockProduct" placeholder="Cantidad producto">
+                    </div>
+
+                    <div>
+                        <label>Precio Gasto</label>
+                        <input [(ngModel)]="priceProduct" type="number" id="priceProduct" placeholder="Precio producto">
+                    </div>
+                </div>
+
+                <button (click)="addSpent()">Gastar</button>
+                <i class="fa-solid fa-chevron-left" id="arrow_left" (click)="showSaleModal()"></i>
+        </div>
+    </div>
+</div>
+}

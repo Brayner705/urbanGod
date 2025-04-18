@@ -1,0 +1,32 @@
+<div>
+    <!--Logo-->
+    <div class="logo">
+        <img src="logo.jpg" alt="Logo">
+        <div class="hour">
+            <h3>{{ date }}</h3>
+        </div>
+    </div>
+
+ 
+    <!--Carga dinamica de los productos-->
+    <!--Products-->
+    <div class="history">
+
+        <div class="title">
+            <i class="fa-solid fa-rectangle-list"></i>
+            <h3>Historial del dia</h3>
+        </div>
+        <!--Carga dinamica de cada venta-->
+        <div class="dates">
+            @for (item of listProduct; track $index) {
+                <h3>{{ item.name }} - {{item.price}}$ - {{item.stock}} unidades</h3>
+            }
+        </div>
+
+        <!--Suma del total de las ventas diarias-->
+        <div class="total">
+            <h4>Ventas totales: {{ ventasTotales }}$</h4>
+        </div>
+    </div>
+    
+</div>

@@ -1,0 +1,37 @@
+<div>
+    <!--Logo-->
+    <div class="logo">
+        <img src="logo.jpg" alt="Logo" (click)="getProducts()">
+        <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Buscar un producto">
+        </div>
+    </div>
+
+ 
+    <!--Carga dinamica de los productos-->
+    <!--Products-->
+  <div class="containerProduct" >
+    @if (isLoaded) {
+        <!--Products-->
+        @for (item of listProducts; track $index) {
+            <div class="products">
+                <!--Datos-->
+                <div class="dates">
+                    <h3>{{item.name}}</h3>
+                    <h3>Stock: {{item.stock}} unidades</h3>
+                    <h3>Precio: {{item.price}}$</h3>
+                </div>
+        
+                <div class="image">
+                    <img src="camisa1.jpg" alt="">
+                </div>
+            </div>
+        }
+    }@else {
+        <div class="products">
+            <h2>Se estan cargando los archivos</h2>
+        </div>
+    }
+  </div>
+</div>
