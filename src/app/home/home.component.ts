@@ -12,8 +12,8 @@ import { Product } from '../models/products.models';
 export class HomeComponent {
   ngOnInit(): void {
     this.getSales();
-    this.obtainingProducts()
-    this.getSpent()
+    this.obtainingProducts();
+    this.getSpent();
   }
 
   private productServices = inject(ProductsServicesService);
@@ -24,9 +24,9 @@ export class HomeComponent {
   ventasTotales: number = 0;
 
   // Spent values
-  spent = {}
-  totalSpent:number = 0;
-  balance:number = 0;
+  spent = {};
+  totalSpent: number = 0;
+  balance: number = 0;
 
   // Values of Sales
   selectedProduct: string = '';
@@ -34,7 +34,7 @@ export class HomeComponent {
   priceProduct?: number | null;
   nameProduct?: string | null;
 
-  productsShop:any[] = [];
+  productsShop: any[] = [];
   saleProductShop: any[] = [];
   listProduct = {};
 
@@ -42,57 +42,67 @@ export class HomeComponent {
   productNameAdd?: string | null;
   stockProductAdd?: number | null;
   priceProductAdd?: number | null;
-  newStock:number = 0;
+  newStock: number = 0;
+  limitStock: number = 0;
 
   // Products of sales modal
-  productos = ['Camisa corta', 'Camisa larga'];
+  productos: any[] = [];
 
   // Balance
-  calculateBalance = ()=> {
+  calculateBalance = () => {
     this.balance = this.ventasTotales - this.totalSpent;
-  }
+  };
 
   // add spent to dataBase
-  addSpent = ()=> {
-    if(this.nameProduct == null || this.stockProduct == null || this.priceProduct == null){
+  addSpent = () => {
+    if (
+      this.nameProduct == null ||
+      this.stockProduct == null ||
+      this.priceProduct == null
+    ) {
       alert('Rellena todos los campos por favor');
-      return
+      return;
     }
     this.spent = {
       name: this.nameProduct,
       stock: this.stockProduct,
-      price: this.priceProduct
-    }
-    this.productServices.addSpent(this.spent).subscribe(()=>{
+      price: this.priceProduct,
+    };
+    this.productServices.addSpent(this.spent).subscribe(() => {
       console.log('Se ga hecho un gasto');
       this.cleanForm();
       this.getSpent();
-    })
-  }
+    });
+  };
 
   // Obtaining spents
-  getSpent = ()=>{
+  getSpent = () => {
     this.totalSpent = 0;
-    this.productServices.getSpent().subscribe(data => {
-      data.forEach((item:any)=> {
+    this.productServices.getSpent().subscribe((data) => {
+      data.forEach((item: any) => {
         this.totalSpent += item.price;
-      })
-      this.calculateBalance()
-    })
-  }
+      });
+      this.calculateBalance();
+    });
+  };
 
   // Obtaining products
-  obtainingProducts = ()=> {
-    this.productServices.getProductsShop().subscribe(data => {
-      this.productsShop = this.obtainingProductLow(data).slice(0,3)
-    })
-  }
+  obtainingProducts = () => {
+    this.productServices.getProductsShop().subscribe((data) => {
+      this.productos = [];
+      this.productsShop = this.obtainingProductLow(data).slice(0, 3);
+      data.forEach((item) => {
+        this.productos.push(item.name);
+      });
 
-  obtainingProductLow = (data:Product[]) => {
-    data.sort((a,b) => a.stock - b.stock);
+      console.log(this.productos);
+    });
+  };
+
+  obtainingProductLow = (data: Product[]) => {
+    data.sort((a, b) => a.stock - b.stock);
     return data;
-
-  }
+  };
 
   // Add products to DataBase
   saveProducts = () => {
@@ -125,7 +135,9 @@ export class HomeComponent {
           this.priceProductAdd
         ) {
           // Ask if the user will update the stock (Add)
-          let result = confirm('Se va a actualizar el producto ¿desea continuar?');
+          let result = confirm(
+            'Se va a actualizar el producto ¿desea continuar?'
+          );
 
           if (result) {
             this.newStock = existingProduct.stock + this.stockProductAdd;
@@ -146,10 +158,10 @@ export class HomeComponent {
                   console.log('error: ', err);
                 },
               });
-          }else{
+          } else {
             alert('No se puede agregar un producto duplicado');
-            this.cleanForm()
-            return
+            this.cleanForm();
+            return;
           }
         } else {
           this.productServices
@@ -181,6 +193,13 @@ export class HomeComponent {
 
   // Add Sale to object
   addSale = () => {
+    this.productServices
+      .getProductByNameDB(this.selectedProduct)
+      .subscribe((product) => {
+        this.limitStock = product.stock;
+      });
+
+    // add condition for limite stockProduct
     if (
       !this.selectedProduct ||
       this.stockProduct == null ||
@@ -190,27 +209,49 @@ export class HomeComponent {
       return;
     }
 
-    // add product to object
-    this.listProduct = {
-      name: this.selectedProduct,
-      stock: this.stockProduct,
-      price: this.priceProduct,
-    };
+    // Checking exist product in stock
+    if (this.limitStock > 0) {
+      // add product to object
+      this.listProduct = {
+        name: this.selectedProduct,
+        stock: this.stockProduct,
+        price: this.priceProduct,
+      };
 
-    // add product to list
-    this.saleProductShop.push(this.listProduct);
+      // add product to list
+      this.saleProductShop.push(this.listProduct);
 
-    console.log(this.saleProductShop);
-    console.log(this.saleProductShop[0]);
+      console.log(this.saleProductShop);
+      console.log(this.saleProductShop[0]);
 
-    // Add Sale to dataBase
-    this.productServices.addSalesToDB(this.listProduct).subscribe(() => {
-      console.log('Productos guardados correctamente');
+      // Updating stock
+      let otherStock = this.stockProduct;
+
+      this.productServices
+        .getProductByNameDB(this.selectedProduct)
+        .subscribe((data) => {
+          this.newStock = data.stock - otherStock;
+
+          console.log('Viejo stock: ', data.stock);
+
+          this.productServices
+            .updateStockByName(this.selectedProduct, this.newStock, data.price)
+            .subscribe((data) => {
+              console.log('Nuevo stock: ', data);
+            });
+        });
+
+      // Add Sale to dataBase
+      this.productServices.addSalesToDB(this.listProduct).subscribe(() => {
+        console.log('Productos guardados y actualizados correctamente');
+        this.cleanForm();
+        this.getSales();
+        this.showSale = false;
+      });
+    }else{
+      alert('No hay suficiente unidades del producto a vender');
       this.cleanForm();
-      this.getSales();
-      this.showSale = false;
-    });
-
+    }
   };
 
   cleanForm = () => {
@@ -241,7 +282,7 @@ export class HomeComponent {
       products.forEach((data) => {
         this.ventasTotales += data.price;
       });
-      this.calculateBalance()
+      this.calculateBalance();
     });
   };
 

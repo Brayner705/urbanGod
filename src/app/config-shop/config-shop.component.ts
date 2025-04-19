@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import {autoTable} from 'jspdf-autotable'
 import { ProductsServicesService } from '../products-services.service';
+import { Product } from '../models/products.models';
 
 @Component({
   selector: 'app-config-shop',
@@ -15,10 +16,13 @@ export class ConfigShopComponent {
 
   productsService = inject(ProductsServicesService);
   datosPDF:any[] = [];
+  ventasTotales: number = 0;
+  finalY:number = 0;
 
 
   ngOnInit(): void {
     this.listProductsSale();
+    this.getSales();
   }
 
   listProductsSale = () =>{
@@ -30,8 +34,19 @@ export class ConfigShopComponent {
       });
 
       console.log(this.datosPDF)
+      console.log('Cantidad de fila: ', this.datosPDF.length)
     })
   }
+
+  // Get sale
+  getSales = () => {
+    this.productsService.getProductsDB().subscribe((products: Product[]) => {
+      // Add the sales
+      products.forEach((data) => {
+        this.ventasTotales += data.price;
+      });
+    });
+  };
 
   generarPdfConTabla() {
     const doc = new jsPDF();
@@ -65,8 +80,18 @@ export class ConfigShopComponent {
       alternateRowStyles: {
         fillColor: [25, 25, 35],                // Fondo ligeramente distinto para filas alternas
       },
-      margin: { top: 20 }
+      margin: { top: 20 },
+      didDrawPage: (data) => {
+        let finalY:number | undefined = 1
+        finalY = data.cursor?.y; // El valor finalY te da la última posición de la tabla
+        console.log("Altura calculada de la tabla: ", finalY);
+        doc.setFontSize(12);
+
+        const textPosicionText = finalY! + 10;
+        doc.text(`Ventas totales: ${this.ventasTotales} $`, x + 35, finalY! + 10);
+      }
     });
+
 
     doc.save(`historial de ventas del ${this.date}`);
   }
