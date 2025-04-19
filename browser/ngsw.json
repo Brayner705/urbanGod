@@ -1,0 +1,75 @@
+{
+  "configVersion": 1,
+  "timestamp": 1745024188293,
+  "index": "/urbanGod/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/urbanGod/chunk-ALL2Y76K.js",
+        "/urbanGod/chunk-CKTZZQSA.js",
+        "/urbanGod/chunk-FDERIQAA.js",
+        "/urbanGod/chunk-FK6H3RFT.js",
+        "/urbanGod/chunk-SYZBSFR2.js",
+        "/urbanGod/favicon.ico",
+        "/urbanGod/index.html",
+        "/urbanGod/main-SQJLKIL5.js",
+        "/urbanGod/polyfills-FFHMD2TL.js",
+        "/urbanGod/styles-SUGJ664F.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/urbanGod/camisa1.jpg",
+        "/urbanGod/logo.jpg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/urbanGod/camisa1.jpg": "23658e4fceb600ff74f65850f4d92f698ac81402",
+    "/urbanGod/chunk-ALL2Y76K.js": "f461a269009838a13edfd2c9e857ec4c273a96b6",
+    "/urbanGod/chunk-CKTZZQSA.js": "95c21cf3c9e68366f5f236dc2a74613c00ac4077",
+    "/urbanGod/chunk-FDERIQAA.js": "15d85ae44d58f9569a95e3112d9ea18d82c7a34d",
+    "/urbanGod/chunk-FK6H3RFT.js": "3c538698719f1cf34410542b8c702bc484e025ee",
+    "/urbanGod/chunk-SYZBSFR2.js": "969148966fffef782532efae7da8a6525c563640",
+    "/urbanGod/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/urbanGod/index.html": "50f805d3847b37d5ba416b3e7e0806e54dc99390",
+    "/urbanGod/logo.jpg": "d62616dc6cca74c0350a20d0b617e3ca6e457081",
+    "/urbanGod/main-SQJLKIL5.js": "d0ed10b70aaf6af21e727407fecf63c9f6bcc851",
+    "/urbanGod/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/urbanGod/styles-SUGJ664F.css": "2c685733a9c97369403216beddde30ddd07e2f91"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
